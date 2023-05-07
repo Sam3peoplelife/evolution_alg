@@ -29,7 +29,6 @@ def fitness_func(population, func):
 
 def sigma_func(parent, population, sigma, mu):
     for i in range(mu):
-        parent = random.choice(population)
         child = [parent[0] + random.gauss(0, sigma), parent[1] + random.gauss(0, sigma)]
         population.append(child)
 
@@ -42,29 +41,23 @@ def mutation(population, mut):
 def choose_best(population, fitness, lamda_):
     new_gen = []
     for i in range(lamda_):
-        new_gen.append(population[fitness.index(fitness[i])])
-        print(fitness[i])
+        new_gen.append(population[fitness.index(min(fitness))])
+        fitness.remove(min(fitness))
     return new_gen
 
 def genetic_alg(func, num_gen=5, mut_prob=0.1, sigma=0.1, lambda_=5, mu=10):
     population = create_population(lambda_)
-    best_par = None
-    best_fit = None
     for i in range(num_gen):
         fitness_values = fitness_func(population, func)
-        fitness_values.sort()
         print(fitness_values)
-        best = fitness_values[0]
-        if best_fit == None or best < best_fit:
-            best_fit = best
-            best_par = population[fitness_values.index(best)]
+        best = min(fitness_values)
         print(best)
-        sigma_func(best_par, population, sigma, mu)
+        sigma_func(population[fitness_values.index(best)], population, sigma, mu)
         mutation(population, mut_prob)
         fitness_values = fitness_func(population, func)
-        fitness_values.sort()
         print(fitness_values)
-        #print(i+1, " ", fitness_values[0], " ", sum(fitness_values)/len(fitness_values))
+        print(min(fitness_values))
+        print(i+1, " ", min(fitness_values), " ", sum(fitness_values)/len(fitness_values))
         population = choose_best(population, fitness_values, lambda_)
 
-genetic_alg(matyas)
+genetic_alg(bukin6)
