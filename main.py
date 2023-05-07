@@ -29,14 +29,15 @@ def fitness_func(population, func):
         fitness.append(func(ind))
     return fitness
 
-def sigma(population):
+def sigma_func(population, sigma):
     new_population = []
     for i in range(len(population)):
         parent = random.choice(population)
-        child = [parent[0] + random.gauss(0, s1gma), parent[1] + random.gauss(0, s1gma)]
+        child = [parent[0] + random.gauss(0, sigma), parent[1] + random.gauss(0, sigma)]
         new_population.append(child)
+    return new_population
 
-def mutation(population):
+def mutation(population, mut):
     for i in range(len(population)):
         candidate = population[i]
         mutation_candidate = [candidate[0] + random.gauss(0, mut), candidate[1] + random.gauss(0, mut)]
@@ -46,9 +47,15 @@ def genetic_alg(func, num_gen=1000, pop_len=100, mut_prob=0.1, sigma=0.1):
     population = create_population(pop_len)
     fitness_values = fitness_func(population, func)
     for i in range(num_gen):
-        offspring = []
+        offspring = sigma_func(population, sigma)
+        mutation(offspring, mut_prob)
+        best = min(fitness_values)
+        avg = sum(fitness_values) / len(fitness_values)
+        if i % 100 == 0:
+            print(i+1, " ", best, " ", avg)
+        population = offspring
+        fitness_values = fitness_func(population, func)
 
 
+genetic_alg(matyas)
 
-s1gma = 0.1
-mut = 0.1
