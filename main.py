@@ -42,6 +42,12 @@ def mutation(population):
         mutation_candidate = [candidate[0] + random.gauss(0, mut), candidate[1] + random.gauss(0, mut)]
         population[i] = mutation_candidate
 
+def genetic_alg(func, num_gen=1000, pop_len=100, mut_prob=0.1, sigma=0.1):
+    population = create_population(pop_len)
+    fitness_values = fitness_func(population, func)
+    for i in range(num_gen):
+        offspring = []
+
 
 
 s1gma = 0.1
