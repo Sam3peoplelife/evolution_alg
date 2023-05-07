@@ -45,19 +45,19 @@ def choose_best(population, fitness, lamda_):
         fitness.remove(min(fitness))
     return new_gen
 
-def genetic_alg(func, num_gen=5, mut_prob=0.1, sigma=0.1, lambda_=5, mu=10):
+def genetic_alg(func, num_gen=5000, mut_prob=0.01, sigma=0.01, lambda_=15, mu=100):
     population = create_population(lambda_)
+    minimum = None
     for i in range(num_gen):
         fitness_values = fitness_func(population, func)
-        print(fitness_values)
         best = min(fitness_values)
-        print(best)
+        if minimum == None or minimum > best:
+            minimum = best
+            coord = population[fitness_values.index(minimum)]
+            print(i + 1, " ", minimum, " ", coord)
         sigma_func(population[fitness_values.index(best)], population, sigma, mu)
         mutation(population, mut_prob)
         fitness_values = fitness_func(population, func)
-        print(fitness_values)
-        print(min(fitness_values))
-        print(i+1, " ", min(fitness_values), " ", sum(fitness_values)/len(fitness_values))
         population = choose_best(population, fitness_values, lambda_)
 
-genetic_alg(bukin6)
+genetic_alg(schaffer2)
