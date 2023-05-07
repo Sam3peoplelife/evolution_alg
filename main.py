@@ -12,9 +12,8 @@ def matyas(x):
 def schaffer2(x):
     return 0.5 + ((math.sin(x[0]**2 - x[1]**2)**2 - 0.5) / (1 + 0.001 * (x[0]**2 + x[1]**2))**2)
 
-
 def create_ind():
-    return [random.uniform(-5,5), random.uniform(-5,5)]
+    return [random.uniform(-5, 5), random.uniform(-5, 5)]
 
 def create_population(pop_len):
     population = []
@@ -28,13 +27,11 @@ def fitness_func(population, func):
         fitness.append(func(ind))
     return fitness
 
-def sigma_func(population, sigma, mu):
+def sigma_func(parent, population, sigma, mu):
     for i in range(mu):
         parent = random.choice(population)
         child = [parent[0] + random.gauss(0, sigma), parent[1] + random.gauss(0, sigma)]
         population.append(child)
-
-
 
 def mutation(population, mut):
     for i in range(len(population)):
@@ -42,25 +39,32 @@ def mutation(population, mut):
         mutation_candidate = [candidate[0] + random.gauss(0, mut), candidate[1] + random.gauss(0, mut)]
         population[i] = mutation_candidate
 
-
 def choose_best(population, fitness, lamda_):
     new_gen = []
-    fitness.sort()
     for i in range(lamda_):
-        new_gen.append(population[fitness.index(fitness[lamda_])])
+        new_gen.append(population[fitness.index(fitness[i])])
+        print(fitness[i])
     return new_gen
 
-def genetic_alg(func, num_gen=100, pop_len=100, mut_prob=0.1, sigma=0.1, lambda_ = 30, mu = 20):
+def genetic_alg(func, num_gen=5, mut_prob=0.1, sigma=0.1, lambda_=5, mu=10):
     population = create_population(lambda_)
-    sigma_func(population, sigma, mu)
-    fitness_values = fitness_func(population, func)
+    best_par = None
+    best_fit = None
     for i in range(num_gen):
-        print(i+1, " ", min(fitness_values))
+        fitness_values = fitness_func(population, func)
+        fitness_values.sort()
+        print(fitness_values)
+        best = fitness_values[0]
+        if best_fit == None or best < best_fit:
+            best_fit = best
+            best_par = population[fitness_values.index(best)]
+        print(best)
+        sigma_func(best_par, population, sigma, mu)
         mutation(population, mut_prob)
-        offspring = choose_best(population, fitness_values, lambda_)
-
-
-
+        fitness_values = fitness_func(population, func)
+        fitness_values.sort()
+        print(fitness_values)
+        #print(i+1, " ", fitness_values[0], " ", sum(fitness_values)/len(fitness_values))
+        population = choose_best(population, fitness_values, lambda_)
 
 genetic_alg(matyas)
-
