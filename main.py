@@ -29,4 +29,20 @@ def fitness_func(population, func):
         fitness.append(func(ind))
     return fitness
 
+def sigma(population):
+    new_population = []
+    for i in range(len(population)):
+        parent = random.choice(population)
+        child = [parent[0] + random.gauss(0, s1gma), parent[1] + random.gauss(0, s1gma)]
+        new_population.append(child)
 
+def mutation(population):
+    for i in range(len(population)):
+        candidate = population[i]
+        mutation_candidate = [candidate[0] + random.gauss(0, mut), candidate[1] + random.gauss(0, mut)]
+        population[i] = mutation_candidate
+
+
+
+s1gma = 0.1
+mut = 0.1
