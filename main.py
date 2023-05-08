@@ -1,7 +1,6 @@
 import random
 import math
-import matplotlib.pyplot as plt
-import numpy as np
+
 
 def bukin6(x):
     return 100 * math.sqrt(abs(x[1] - 0.01 * x[0]**2)) + 0.01 * abs(x[0] + 10)
@@ -42,10 +41,11 @@ def choose_best(population, fitness, lamda_):
     new_gen = []
     for i in range(lamda_):
         new_gen.append(population[fitness.index(min(fitness))])
+        population.remove(population[fitness.index(min(fitness))])
         fitness.remove(min(fitness))
     return new_gen
 
-def genetic_alg(func, num_gen=5000, mut_prob=0.01, sigma=0.01, lambda_=15, mu=100):
+def genetic_alg(func, num_gen=500, mut_prob=0.1, sigma=0.1, lambda_=15, mu=100):
     population = create_population(lambda_)
     minimum = None
     for i in range(num_gen):
@@ -55,6 +55,8 @@ def genetic_alg(func, num_gen=5000, mut_prob=0.01, sigma=0.01, lambda_=15, mu=10
             minimum = best
             coord = population[fitness_values.index(minimum)]
             print(i + 1, " ", minimum, " ", coord)
+            if minimum < 1e-6:
+                return 0
         sigma_func(population[fitness_values.index(best)], population, sigma, mu)
         mutation(population, mut_prob)
         fitness_values = fitness_func(population, func)
